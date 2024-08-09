@@ -127,9 +127,6 @@ func (s *Service) SendChannelNotification(live *live.Live) error {
 		Image: &discordgo.MessageEmbedImage{
 			URL: live.ImageUrl,
 		},
-		Thumbnail: &discordgo.MessageEmbedThumbnail{
-			URL: live.Member.ImageUrl,
-		},
 	}
 	_, err := s.DiscordService.Client.ChannelMessageSendEmbed(os.Getenv("DISCORD_NOTIFICATION_CHANNEL_ID"), embed)
 	return err
