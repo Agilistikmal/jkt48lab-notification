@@ -84,7 +84,7 @@ func (s *Service) GetIDNLives() ([]*live.Live, error) {
 			if l.Status != "live" {
 				continue
 			}
-			if !strings.Contains(strings.ToUpper(l.Slug), strings.ToUpper(os.Getenv("PREFIX"))) {
+			if !strings.Contains(strings.ToUpper(l.Creator.Username), strings.ToUpper(os.Getenv("PREFIX"))) {
 				continue
 			}
 			startedAt, _ := time.Parse("2006-01-02T15:04:05+07:00", l.LiveAt)
