@@ -8,7 +8,7 @@ Join server discord JKT48Lab https://discord.gg/dVgmJfmXc2
 
 Live Streaming:
 - <img src="https://jkt48lab.safatanc.com/assets/IDN_Live.svg" alt="banner" height="12"/> IDNLive ✅
-- <img src="https://jkt48lab.safatanc.com/assets/SHOWROOM_logo.svg" alt="banner" height="12"/> Showroom ❌ (In Progress)
+- <img src="https://jkt48lab.safatanc.com/assets/SHOWROOM_logo.svg" alt="banner" height="12"/> Showroom ✅
 
 Timetable:
 - Meet & Greet ❌

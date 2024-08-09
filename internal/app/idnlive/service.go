@@ -21,7 +21,7 @@ func NewService() *Service {
 	return &Service{}
 }
 
-func (s *Service) GetIDNLives() ([]*live.Live, error) {
+func (s *Service) GetLives() ([]*live.Live, error) {
 	var lives []*live.Live
 
 	page := 1
@@ -48,7 +48,7 @@ func (s *Service) GetIDNLives() ([]*live.Live, error) {
 				`, page),
 		})
 
-		gReq, err := http.NewRequest("POST", "https://api.idn.app/graphql", bytes.NewBuffer(query))
+		gReq, err := http.NewRequest("POST", os.Getenv("IDNLIVE_BASE_URL"), bytes.NewBuffer(query))
 		if err != nil {
 			return nil, err
 		}
@@ -87,8 +87,8 @@ func (s *Service) GetIDNLives() ([]*live.Live, error) {
 			if !strings.Contains(strings.ToUpper(l.Creator.Username), strings.ToUpper(os.Getenv("PREFIX"))) {
 				continue
 			}
-			startedAt, _ := time.Parse("2006-01-02T15:04:05+07:00", l.LiveAt)
-			endAt, _ := time.Parse("2006-01-02T15:04:05+07:00", l.EndAt)
+			startedAt, _ := time.Parse("2006-01-02T15:04:05Z07:00", l.LiveAt)
+			endAt, _ := time.Parse("2006-01-02T15:04:05Z07:00", l.EndAt)
 			lives = append(lives, &live.Live{
 				Slug:         l.Slug,
 				Platform:     "IDN",

@@ -10,18 +10,21 @@ import (
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/discord"
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/idnlive"
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/live"
+	"github.com/agilistikmal/jkt48lab-notification/internal/app/showroom"
 	"github.com/bwmarrin/discordgo"
 )
 
 type Service struct {
-	DiscordService *discord.Service
-	IDNLiveService *idnlive.Service
+	IDNLiveService  *idnlive.Service
+	ShowroomService *showroom.Service
+	DiscordService  *discord.Service
 }
 
-func NewService(idnLiveService *idnlive.Service, discordService *discord.Service) *Service {
+func NewService(idnLiveService *idnlive.Service, showroomService *showroom.Service, discordService *discord.Service) *Service {
 	return &Service{
-		IDNLiveService: idnLiveService,
-		DiscordService: discordService,
+		IDNLiveService:  idnLiveService,
+		ShowroomService: showroomService,
+		DiscordService:  discordService,
 	}
 }
 
@@ -32,13 +35,21 @@ func (s *Service) Listen() {
 	go func() {
 		for {
 			var lives []*live.Live
-			idnLives, err := s.IDNLiveService.GetIDNLives()
+
+			// IDN Live
+			idnLives, err := s.IDNLiveService.GetLives()
 			if err != nil {
 				log.Fatal(err)
 			}
 			lives = append(lives, idnLives...)
 
-			log.Printf("Lives: %v", len(lives))
+			// Showroom
+			showroomLives, err := s.ShowroomService.GetLives()
+			if err != nil {
+				log.Fatal(err)
+			}
+			lives = append(lives, showroomLives...)
+
 			err = s.FilterAndSendNotification(lives)
 			if err != nil {
 				log.Fatal(err)
@@ -99,7 +110,7 @@ func (s *Service) SendChannelNotification(live *live.Live) error {
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "JKT48Lab",
-				Value:  fmt.Sprintf("[klik disini](%s)", live.StreamingUrl),
+				Value:  "Soon",
 				Inline: true,
 			},
 			{
@@ -109,12 +120,15 @@ func (s *Service) SendChannelNotification(live *live.Live) error {
 			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: "JKT48Lab by safatanc.com",
+			Text: "JKT48Lab",
 		},
 		Timestamp: live.StartedAt.Format(time.RFC3339),
 		Color:     0xccec1c,
 		Image: &discordgo.MessageEmbedImage{
 			URL: live.ImageUrl,
+		},
+		Thumbnail: &discordgo.MessageEmbedThumbnail{
+			URL: live.Member.ImageUrl,
 		},
 	}
 	_, err := s.DiscordService.Client.ChannelMessageSendEmbed(os.Getenv("DISCORD_NOTIFICATION_CHANNEL_ID"), embed)

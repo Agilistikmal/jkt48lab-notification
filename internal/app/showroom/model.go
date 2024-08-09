@@ -1,4 +1,4 @@
-package live
+package showroom
 
 type ShowroomResponses struct {
 	OnLives []struct {
@@ -21,8 +21,10 @@ type ShowroomResponses struct {
 }
 
 type ShowroomStreamingUrlResponses struct {
-	StreamingUrlList []struct {
-		Label string `json:"label,omitempty"`
-		Url   string `json:"url,omitempty"`
-	} `json:"streaming_url_list,omitempty"`
+	StreamingUrlList []StreamingUrl `json:"streaming_url_list,omitempty"`
+}
+
+type StreamingUrl struct {
+	Label string `json:"label,omitempty"`
+	Url   string `json:"url,omitempty"`
 }

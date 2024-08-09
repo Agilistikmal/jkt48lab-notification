@@ -9,6 +9,7 @@ import (
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/discord"
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/idnlive"
 	"github.com/agilistikmal/jkt48lab-notification/internal/app/listener"
+	"github.com/agilistikmal/jkt48lab-notification/internal/app/showroom"
 	"github.com/joho/godotenv"
 )
 
@@ -16,8 +17,9 @@ func main() {
 	godotenv.Load()
 
 	idnLiveService := idnlive.NewService()
+	showroomService := showroom.NewService()
 	discordService := discord.NewService()
-	listenerService := listener.NewService(idnLiveService, discordService)
+	listenerService := listener.NewService(idnLiveService, showroomService, discordService)
 
 	listenerService.Listen()
 
