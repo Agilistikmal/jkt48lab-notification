@@ -39,26 +39,21 @@ func (s *Service) GetLives() ([]*live.Live, error) {
 	}
 
 	for _, liveGenres := range showroomResponses.OnLives {
-		if liveGenres.GenreName == "idol" {
+		if liveGenres.GenreName == "Popularity" {
 			for _, l := range liveGenres.Lives {
 				if !strings.Contains(strings.ToUpper(l.RoomUrlKey), strings.ToUpper(os.Getenv("PREFIX"))) {
 					continue
 				}
-				streamingUrl, err := s.GetStreamingUrl(l.RoomID)
-				if err != nil {
-					return nil, err
-				}
 				startedAt := time.Unix(int64(l.StartedAt), 0)
 				lives = append(lives, &live.Live{
-					Slug:         l.RoomUrlKey,
-					Title:        l.Telop,
-					ImageUrl:     l.ImageSquare,
-					Views:        l.ViewNum,
-					Platform:     "SHOWROOM",
-					OriginalUrl:  fmt.Sprintf("https://showroom-live.com/r/%v", l.RoomUrlKey),
-					StreamingUrl: streamingUrl.Url,
-					StartedAt:    &startedAt,
-					EndAt:        nil,
+					Slug:        l.RoomUrlKey,
+					Title:       l.Telop,
+					ImageUrl:    l.ImageSquare,
+					Views:       l.ViewNum,
+					Platform:    "SHOWROOM",
+					OriginalUrl: fmt.Sprintf("https://showroom-live.com/r/%v", l.RoomUrlKey),
+					StartedAt:   &startedAt,
+					EndAt:       nil,
 					Member: live.Member{
 						Username:  l.RoomUrlKey,
 						Name:      l.MainName,
@@ -67,6 +62,7 @@ func (s *Service) GetLives() ([]*live.Live, error) {
 					},
 					RoomID: fmt.Sprintf("%v", l.RoomID),
 				})
+				time.Sleep(10 * time.Millisecond)
 			}
 			break
 		}
